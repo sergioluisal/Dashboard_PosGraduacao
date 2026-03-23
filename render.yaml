@@ -1,7 +1,11 @@
 services:
   - type: web
-    name: Dashboard_PosGraduacao
+    name: dashboard-analise
     env: python
-    plan: free
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn data_loader:server"
+    region: ohio # Região padrão e gratuita do Render
+    plan: free # Usa a camada gratuita
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0 # Garante uma versão estável do Python para o Pandas e Plotly
