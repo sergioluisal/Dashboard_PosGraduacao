@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .chart-card-wrapper { width: 100%; min-height: 380px; display: flex; flex-direction: column; overflow: hidden; }
+    .plot-container { flex-grow: 1; }
+    .js-plotly-plot, .plot-container { width: 100% !important; max-width: 100%; }
+    .svg-container { width: 100% !important; margin: 0 auto; }
+</style>
+
+<div>
+    <div style="margin-bottom: 48px;">
+        <h1 style="font-size: 40px; font-weight: bold; color: #0f172a; margin-bottom: 12px;">Painel de Indicadores</h1>
+        <p style="color: #64748b; font-size: 18px;">Visão geral dos programas oferecidos e métricas globais de qualidade institucional.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-bottom: 32px;">
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Volume de Programas:</strong> Distribuição da quantidade de programas conforme a sua descrição e área.</p>
+            </div>
+            {{ grafico_prog|safe }}
+        </div>
+
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #ecfdf5; border-left: 4px solid #059669; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Predomínio Institucional:</strong> Proporção de programas ofertados em IES Públicas versus Privadas.</p>
+            </div>
+			{{ grafico_nat | safe }}
+        </div>
+    </div>
+
+    <h2 style="font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0;">Métricas de Qualidade (Rankings)</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-bottom: 48px;">
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #fff1f2; border-left: 4px solid #f43f5e; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Times Higher Education (THE):</strong> Posição das instituições ofertantes no ranking mundial THE.</p>
+            </div>
+            {{ grafico_the|safe }}
+        </div>
+
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #fff1f2; border-left: 4px solid #fb7185; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>QS World University Rankings:</strong> Posição no ranking da América Latina e Caribe (Projeção 2026).</p>
+            </div>
+            {{ grafico_qs|safe }}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

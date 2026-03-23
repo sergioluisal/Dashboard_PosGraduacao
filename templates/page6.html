@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8 border-b pb-4">Análise Qualitativa e Ranking</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 border-l-4 border-blue-500">
+            <p class="text-sm font-medium text-gray-500 mb-1">Total de Programas</p>
+            <h3 class="text-4xl font-bold text-gray-800">{{ total_programas }}</h3>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 border-l-4 border-green-500">
+            <p class="text-sm font-medium text-gray-500 mb-1">Programas Nível Alto (A)</p>
+            <h3 class="text-4xl font-bold text-green-600">{{ total_destaque }}</h3>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 border-l-4 border-purple-500">
+            <p class="text-sm font-medium text-gray-500 mb-1">País com Mais Ofertas</p>
+            <h3 class="text-3xl font-bold text-purple-600 truncate mt-1">{{ top_pais }}</h3>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-10">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">Tabela Detalhada de Conceitos</h2>
+        <div class="w-full overflow-hidden">
+            {{ tabela_ranking | safe }}
+        </div>
+    </div>
+
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Análise Textual (Nuvens de Palavras)</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 48px;">
+        
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Missão / Perfil do Egresso:</strong> Termos mais frequentes encontrados na descrição do perfil.</p>
+            </div>
+            {% if nuvem_missao %} 
+                <img src="data:image/png;base64,{{ nuvem_missao }}" alt="Nuvem Missão" style="width: 100%; height: auto; border-radius: 8px;"> 
+            {% else %} 
+                <p style="color: #94a3b8; text-align: center; padding: 40px 0;">Sem dados</p> 
+            {% endif %}
+        </div>
+
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #ecfdf5; border-left: 4px solid #059669; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Cat: Missão / Perfil:</strong> Principais categorizações da missão dos programas.</p>
+            </div>
+            {% if nuvem_cat_missao %} 
+                <img src="data:image/png;base64,{{ nuvem_cat_missao }}" alt="Nuvem Cat Missão" style="width: 100%; height: auto; border-radius: 8px;"> 
+            {% else %} 
+                <p style="color: #94a3b8; text-align: center; padding: 40px 0;">Sem dados</p> 
+            {% endif %}
+        </div>
+
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Área de Concentração:</strong> Principais áreas e linhas de pesquisa abordadas.</p>
+            </div>
+            {% if nuvem_area %} 
+                <img src="data:image/png;base64,{{ nuvem_area }}" alt="Nuvem Área" style="width: 100%; height: auto; border-radius: 8px;"> 
+            {% else %} 
+                <p style="color: #94a3b8; text-align: center; padding: 40px 0;">Sem dados</p> 
+            {% endif %}
+        </div>
+
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #ecfdf5; border-left: 4px solid #059669; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Cat: Área de Concentração:</strong> Agrupamentos centrais das áreas de pesquisa.</p>
+            </div>
+            {% if nuvem_cat_area %} 
+                <img src="data:image/png;base64,{{ nuvem_cat_area }}" alt="Nuvem Cat Área" style="width: 100%; height: auto; border-radius: 8px;"> 
+            {% else %} 
+                <p style="color: #94a3b8; text-align: center; padding: 40px 0;">Sem dados</p> 
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}

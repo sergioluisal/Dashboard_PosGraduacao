@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <div style="margin-bottom: 48px;">
+        <h1 style="font-size: 40px; font-weight: bold; color: #0f172a; margin-bottom: 12px;">Análise de Distribuição e Excelência</h1>
+        <p style="color: #64748b; font-size: 18px;">Visão detalhada das modalidades, financiamento e prestígio académico.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr; gap: 32px; margin-bottom: 48px;">
+        
+        <!--<div class="card" style="padding: 24px;">
+            <div style="background-color: #f8fafc; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin-bottom: 24px;">
+                <p style="color: #475569; font-size: 14px; margin: 0;">
+                    <strong style="color: #1e293b;">Insight Estratégico:</strong> Este gráfico revela visualmente quais os países que já possuem uma transição maior para o modelo híbrido ou a distância (EAD), comparado com os modelos tradicionais presenciais.
+                </p>
+            </div>
+            {{ grafico_modalidade|safe }}
+        </div>-->
+
+        <div class="card" style="padding: 24px;">
+            <div style="background-color: #f8fafc; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; margin-bottom: 24px;">
+                <p style="color: #475569; font-size: 14px; margin: 0;">
+                    <strong style="color: #1e293b;">Insight Estratégico:</strong> Este gráfico demonstra a disponibilidade de <strong>Bolsas de Estudos (Becas)</strong> por país. É possível identificar rapidamente quais nações oferecem maior apoio financeiro aos estudantes e onde o investimento recai inteiramente sobre o aluno.
+                </p>
+            </div>
+            {{ grafico_bolsas|safe }}
+        </div>
+
+        <div class="card" style="padding: 24px;">
+            <div style="background-color: #fff7ed; border-left: 4px solid #f97316; padding: 16px; border-radius: 4px; margin-bottom: 24px;">
+                <p style="color: #475569; font-size: 14px; margin: 0;">
+                    <strong style="color: #1e293b;">Insight Estratégico:</strong> Matriz de excelência académica por país. As bolhas representam as universidades. Bolhas <span style="color: #f97316; font-weight: bold;">Laranjas e maiores</span> destacam a elite (Top 20 do Ranking QS), permitindo identificar rapidamente quais as nações que concentram os programas de maior prestígio.
+                </p>
+            </div>
+            {{ grafico_matriz|safe }}
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* CSS para garantir que os gráficos não desconfiguram */
+    .chart-card-wrapper { 
+        width: 100%; 
+        min-height: 380px; 
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .plot-container {
+        flex-grow: 1; /* Faz o gráfico preencher o espaço disponível do cartão */
+    }
+</style>
+
+<div>
+    <div style="margin-bottom: 48px;">
+        <h1 style="font-size: 40px; font-weight: bold; color: #0f172a; margin-bottom: 12px;">Estrutura e Internacionalização</h1>
+        <p style="color: #64748b; font-size: 18px;">Mapeamento de requisitos académicos, presença digital e convénios globais.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-bottom: 32px;">
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Pré-requisitos:</strong> O que é exigido aos candidatos antes do processo seletivo.</p>
+            </div>
+            {{ grafico_ingresso|safe }}
+        </div>
+
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Filtro Académico:</strong> Etapas utilizadas pelas universidades para aprovar novos alunos.</p>
+            </div>
+            {{ grafico_selecao|safe }}
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-bottom: 32px;">
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #fff7ed; border-left: 4px solid #f97316; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Exigências de Formação:</strong> Condições obrigatórias para um aluno obter o grau de Doutor.</p>
+            </div>
+            {{ grafico_titulo|safe }}
+        </div>
+
+        <div class="card chart-card-wrapper" style="padding: 24px;">
+            <div style="background-color: #fff7ed; border-left: 4px solid #fb923c; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Transparência:</strong> Canais onde o programa comunica e disponibiliza as suas teses.</p>
+            </div>
+            {{ grafico_visibilidade|safe }}
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 32px; margin-bottom: 48px;">
+        
+        <div class="card chart-card-wrapper" style="padding: 24px; min-height: 400px;">
+            <div style="background-color: #fdf4ff; border-left: 4px solid #c084fc; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Status Global:</strong> Como o programa se posiciona perante a internacionalização.</p>
+            </div>
+            {{ grafico_int|safe }}
+        </div>
+
+        <div class="card chart-card-wrapper" style="padding: 24px; min-height: 450px;">
+            <div style="background-color: #fdf4ff; border-left: 4px solid #9333ea; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Rede de Conexões:</strong> Ranking dos países com maior número de convênios vigentes.</p>
+            </div>
+            {{ grafico_parcerias|safe }}
+</div>
+{% endblock %}

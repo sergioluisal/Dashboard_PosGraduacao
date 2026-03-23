@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* CSS retirado diretamente do seu index.html anexo */
+    .filters-container {
+        display: flex; gap: 24px; margin-bottom: 48px;
+        background: white; padding: 24px; border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .filter-group label { font-size: 14px; font-weight: 600; color: #475569; }
+    .filter-group select {
+        padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;
+        font-family: inherit; font-size: 16px; color: #1e293b; background: white; outline: none; transition: all 0.2s;
+    }
+    .filter-group select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px #bfdbfe; }
+    
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .metric-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+    .metric-label { font-size: 14px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 16px; letter-spacing: 0.5px; }
+    .metric-values { display: flex; flex-direction: column; gap: 12px; }
+    .metric-value { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 8px; }
+    
+    .metric-value-1 { background: #eff6ff; border-left: 4px solid #2563eb; }
+    .metric-value-2 { background: #fdf4ff; border-left: 4px solid #a855f7; } /* A cor roxa certa do seu template */
+    
+    .metric-value-number { font-size: 24px; font-weight: 700; font-family: 'Courier Prime', monospace; color: #0f172a; }
+    .metric-value-country { font-size: 14px; color: #475569; font-weight: 500; }
+
+    .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; margin-bottom: 24px; }
+    .chart-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+    .chart-card h3 { font-size: 18px; font-weight: 600; color: #0f172a; margin-bottom: 24px; text-align: center; }
+    
+    .section-title { font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; }
+</style>
+
+<div>
+    <div style="margin-bottom: 48px;">
+        <h1 style="font-size: 40px; font-weight: bold; color: #0f172a; margin-bottom: 12px;">Comparativo de Países</h1>
+        <p style="color: #64748b; font-size: 18px;">Análise detalhada de indicadores educacionais entre duas nações.</p>
+    </div>
+
+    <form method="get" id="comp-form" class="filters-container">
+        <div class="filter-group">
+            <label>País 1 (Azul)</label>
+            <select name="pais1" onchange="document.getElementById('comp-form').submit()">
+                {% for p in paises %}
+                    <option value="{{p}}" {% if p == kpis.p1_nome %}selected{% endif %}>{{p}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>País 2 (Roxo)</label>
+            <select name="pais2" onchange="document.getElementById('comp-form').submit()">
+                {% for p in paises %}
+                    <option value="{{p}}" {% if p == kpis.p2_nome %}selected{% endif %}>{{p}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <div class="kpi-grid">
+        <div class="metric-card">
+            <div class="metric-label">Total de Programas</div>
+            <div class="metric-values">
+                <div class="metric-value metric-value-1">
+                    <div class="metric-value-number">{{ kpis.p1_prog }}</div>
+                    <div class="metric-value-country">{{ kpis.p1_nome }}</div>
+                </div>
+                <div class="metric-value metric-value-2">
+                    <div class="metric-value-number">{{ kpis.p2_prog }}</div>
+                    <div class="metric-value-country">{{ kpis.p2_nome }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="metric-card">
+            <div class="metric-label">Instituições Únicas</div>
+            <div class="metric-values">
+                <div class="metric-value metric-value-1">
+                    <div class="metric-value-number">{{ kpis.p1_inst }}</div>
+                    <div class="metric-value-country">{{ kpis.p1_nome }}</div>
+                </div>
+                <div class="metric-value metric-value-2">
+                    <div class="metric-value-number">{{ kpis.p2_inst }}</div>
+                    <div class="metric-value-country">{{ kpis.p2_nome }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label">Duração Média (Meses)</div>
+            <div class="metric-values">
+                <div class="metric-value metric-value-1">
+                    <div class="metric-value-number">{{ kpis.p1_dur }}</div>
+                    <div class="metric-value-country">{{ kpis.p1_nome }}</div>
+                </div>
+                <div class="metric-value metric-value-2">
+                    <div class="metric-value-number">{{ kpis.p2_dur }}</div>
+                    <div class="metric-value-country">{{ kpis.p2_nome }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label">Programas Presenciais</div>
+            <div class="metric-values">
+                <div class="metric-value metric-value-1">
+                    <div class="metric-value-number">{{ kpis.p1_presencial }}</div>
+                    <div class="metric-value-country">{{ kpis.p1_nome }}</div>
+                </div>
+                <div class="metric-value metric-value-2">
+                    <div class="metric-value-number">{{ kpis.p2_presencial }}</div>
+                    <div class="metric-value-country">{{ kpis.p2_nome }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Distribuição de Indicadores</h2>
+    <div class="charts-grid">
+        <div class="chart-card">
+            <h3>Modalidade de Ensino</h3>
+            <canvas id="chartEnsino"></canvas>
+        </div>
+        <div class="chart-card">
+            <h3>Natureza da Instituição</h3>
+            <canvas id="chartNatureza"></canvas>
+        </div>
+        <div class="chart-card">
+            <h3>Modalidade do Programa</h3>
+            <canvas id="chartPrograma"></canvas>
+        </div>
+    </div>
+
+    <h2 class="section-title">Evolução Histórica (Novos Programas)</h2>
+    <div class="chart-card" style="margin-bottom: 40px;">
+        <canvas id="chartEvolucao" height="80"></canvas>
+    </div>
+</div>
+
+<script>
+    // Recupera os dados processados no Python
+    const chartData = {{ graficos_data | tojson | safe }};
+    const p1Nome = "{{ kpis.p1_nome }}";
+    const p2Nome = "{{ kpis.p2_nome }}";
+
+    // Tons de Azul (País 1) e Laranja (País 2) para a Distribuição
+    const bgColors1 = ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'];
+    const bgColors2 = ['#f97316', '#fb923c', '#fdba74', '#fed7aa', '#ffedd5'];
+
+    // Função para criar o gráfico com dois anéis (Chart.js suporta multi-datasets na rosca)
+    function createDoughnut(ctxId, dataObj) {
+        new Chart(document.getElementById(ctxId), {
+            type: 'doughnut',
+            data: {
+                labels: dataObj.labels,
+                datasets: [
+                    {
+                        label: p1Nome,
+                        data: dataObj.d1,
+                        backgroundColor: bgColors1,
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    },
+                    {
+                        label: p2Nome,
+                        data: dataObj.d2,
+                        backgroundColor: bgColors2,
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed !== null) { label += context.parsed; }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Renderizar os 3 gráficos de rosca
+    createDoughnut('chartEnsino', chartData.ensino);
+    createDoughnut('chartNatureza', chartData.natureza);
+    createDoughnut('chartPrograma', chartData.programa);
+
+    // =========================================================
+    // GRÁFICO DE EVOLUÇÃO HISTÓRICA (DESIGN MODERNO COM DEGRADÊ)
+    // =========================================================
+    const ctxEvolucao = document.getElementById('chartEvolucao').getContext('2d');
+
+    // Criar o Degradê (Gradient) para o País 1 (Azul)
+    const gradientP1 = ctxEvolucao.createLinearGradient(0, 0, 0, 400);
+    gradientP1.addColorStop(0, 'rgba(37, 99, 235, 0.4)'); // Azul translúcido no topo
+    gradientP1.addColorStop(1, 'rgba(37, 99, 235, 0.0)'); // Transparente na base
+
+    // Criar o Degradê (Gradient) para o País 2 (Laranja)
+    const gradientP2 = ctxEvolucao.createLinearGradient(0, 0, 0, 400);
+    gradientP2.addColorStop(0, 'rgba(249, 115, 22, 0.4)'); // Laranja translúcido no topo
+    gradientP2.addColorStop(1, 'rgba(249, 115, 22, 0.0)'); // Transparente na base
+
+    new Chart(ctxEvolucao, {
+        type: 'line',
+        data: {
+            labels: chartData.historico.anos,
+            datasets: [
+                {
+                    label: p1Nome,
+                    data: chartData.historico.d1,
+                    borderColor: '#2563eb', // Linha Azul
+                    backgroundColor: gradientP1, // Fundo em Degradê Azul
+                    borderWidth: 3,
+                    tension: 0.4, // Curvatura suave
+                    fill: true,
+                    pointRadius: 0, // Esconde o ponto normal
+                    pointHoverRadius: 6, // Ponto grande ao passar o rato
+                    pointBackgroundColor: '#ffffff', // Ponto branco
+                    pointBorderColor: '#2563eb', // Borda do ponto em Azul
+                    pointBorderWidth: 2
+                },
+                {
+                    label: p2Nome,
+                    data: chartData.historico.d2,
+                    borderColor: '#f97316', // Linha Laranja
+                    backgroundColor: gradientP2, // Fundo em Degradê Laranja
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#f97316', // Borda do ponto em Laranja
+                    pointBorderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { 
+                mode: 'index', 
+                intersect: false 
+            },
+            plugins: {
+                legend: { 
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 8,
+                        font: { family: "'Poppins', sans-serif", size: 13 }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    titleFont: { family: "'Poppins', sans-serif", size: 14 },
+                    bodyFont: { family: "'Poppins', sans-serif", size: 13 },
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: true
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false // Esconde as linhas verticais para ficar mais limpo
+                    },
+                    ticks: {
+                        font: { family: "'Poppins', sans-serif", color: '#64748b' }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#e2e8f0',
+                        borderDash: [5, 5], // Linhas horizontais tracejadas e suaves
+                        drawBorder: false
+                    },
+                    ticks: {
+                        precision: 0,
+                        font: { family: "'Poppins', sans-serif", color: '#64748b' }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

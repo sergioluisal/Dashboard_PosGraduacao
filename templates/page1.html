@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h1 class="header-title">Visão Geral Geográfica</h1>
+    <p class="header-subtitle">Análise de Programas de Pós-Graduação na América Latina e Caribe</p>
+
+    <form method="get" style="margin-bottom: 24px;">
+        <select name="pais" onchange="this.form.submit()">
+            <option value="ALL">Visualizar Todos os Países</option>
+            {% for p in paises %}
+                <option value="{{p}}" {% if p == selected %}selected{% endif %}>{{p}}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+    {{ mapa|safe }}
+</div>
+
+<div class="grid-3">
+    <div class="card">{{ g_ensino|safe }}</div>
+    <div class="card">{{ g_natureza|safe }}</div>
+    <div class="card">{{ g_programa|safe }}</div>
+</div>
+{% endblock %}
