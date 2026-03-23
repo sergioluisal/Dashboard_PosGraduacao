@@ -17,7 +17,3 @@ app.register_blueprint(page4_bp)
 app.register_blueprint(page5_bp)
 app.register_blueprint(page6_bp)
 
-# A MÁGICA ESTÁ AQUI: Estas duas linhas abaixo TÊM de ter este espaço à esquerda (indentação)
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
