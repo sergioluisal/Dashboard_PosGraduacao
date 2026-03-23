@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 
 # Importa as páginas (Blueprints)
@@ -19,4 +20,7 @@ app.register_blueprint(page5_bp)
 app.register_blueprint(page6_bp)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Render injeta a porta dinamicamente através de variáveis de ambiente.
+    port = int(os.environ.get("PORT", 5000))
+    # 0.0.0.0 permite conexões externas no ambiente em nuvem
+    app.run(host="0.0.0.0", port=port, debug=False)
