@@ -5,7 +5,7 @@ services:
     region: ohio # Região padrão e gratuita do Render
     plan: free # Usa a camada gratuita
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    startCommand: gunicorn app:app -b 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0 # Garante uma versão estável do Python para o Pandas e Plotly
