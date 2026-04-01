@@ -10,7 +10,26 @@ page5_bp = Blueprint('page5', __name__)
 def indicadores():
     if df.empty:
         return "Erro ao carregar dados. Verifique o terminal."
+        
+    # --- LÓGICA DO FILTRO (Trazida do script Nov) ---
+    pais_selecionado = request.args.get("Pais", "ALL")
+    
+    # Suporte dinâmico para 'pais' ou 'Pais' conforme estiver na sua planilha
+    if 'pais' in df.columns:
+        col_p = 'pais'
+    elif 'Pais' in df.columns:
+        col_p = 'Pais'
+    else:
+        col_p = None
 
+    if col_p:
+        paises_disponiveis = sorted(df[col_p].dropna().unique().tolist())
+        df_filtrado = df if pais_selecionado == "ALL" else df[df[col_p] == pais_selecionado]
+    else:
+        paises_disponiveis = []
+        df_filtrado = df
+
+    # Mantendo a função original de barras (mesmo layout e formatação)
     def criar_grafico_barras(df_dados, col_nome, col_quant, titulo, cor):
         if df_dados.empty:
             return go.Figure()
@@ -26,10 +45,10 @@ def indicadores():
         return fig
 
     # =========================================================
-    # GRÁFICO 1: Quantidade de Programas
+    # GRÁFICO 1: Quantidade de Programas (Com filtro aplicado)
     # =========================================================
-    if 'nome_programa' in df.columns:
-        programas = df['nome_programa'].dropna().astype(str)
+    if 'nome_programa' in df_filtrado.columns:
+        programas = df_filtrado['nome_programa'].dropna().astype(str)
         ignorar = ['nan', 'não informado', 'nao informado', 'nenhum', 'nd', 'n/a']
         df_prog = programas[~programas.str.strip().str.lower().isin(ignorar)].value_counts().reset_index()
         df_prog.columns = ['Programa', 'Quantidade']
@@ -43,7 +62,7 @@ def indicadores():
                                     'Programa', 'Quantidade', 'Programas Mais Ofertados', '#10b981')
 
     # =========================================================
-    # GRÁFICO 2: Predomínio Institucional (CÓDIGO BLINDADO)
+    # GRÁFICO 2: Predomínio Institucional (Mantendo a contagem original)
     # =========================================================
     # Valores base caso a leitura falhe
     qtd_privada = 17
@@ -51,15 +70,15 @@ def indicadores():
     
     try:
         # Busca dinâmica das colunas
-        col_uni = [c for c in df.columns if 'universidade' in c.lower() or 'institui' in c.lower()]
-        col_nat = [c for c in df.columns if 'natureza' in c.lower()]
+        col_uni = [c for c in df_filtrado.columns if 'universidade' in c.lower() or 'institui' in c.lower()]
+        col_nat = [c for c in df_filtrado.columns if 'natureza' in c.lower()]
         
         if col_uni and col_nat:
             nome_col_uni = col_uni[0]
             nome_col_nat = col_nat[0]
             
-            # Remove nulos e universidades repetidas
-            df_ies = df[[nome_col_uni, nome_col_nat]].dropna()
+            # Remove nulos e universidades repetidas usando df_filtrado
+            df_ies = df_filtrado[[nome_col_uni, nome_col_nat]].dropna()
             df_ies_unicas = df_ies.drop_duplicates(subset=[nome_col_uni]).copy()
             
             # Transforma a coluna numa lista nativa de Python
@@ -77,7 +96,7 @@ def indicadores():
     except Exception as e:
         print(f"Ignorando erro de leitura e usando dados base: {e}")
 
-    # Cria o gráfico de rosca injetando os números finais
+    # Cria o gráfico de rosca injetando os números finais (Mantendo as cores originais)
     fig_nat_exclusiva = go.Figure(data=[go.Pie(
         labels=['Privada', 'Pública'],
         values=[qtd_privada, qtd_publica],  
@@ -95,18 +114,18 @@ def indicadores():
     )
 
     # =========================================================
-    # GRÁFICOS 3 e 4: Métricas de Qualidade (Rankings)
+    # GRÁFICOS 3 e 4: Métricas de Qualidade (Com filtro aplicado)
     # =========================================================
-    if 'the_ranking' in df.columns:
-        df_the = df['the_ranking'].dropna().value_counts().reset_index()
+    if 'the_ranking' in df_filtrado.columns:
+        df_the = df_filtrado['the_ranking'].dropna().value_counts().reset_index()
         df_the.columns = ['Classificação', 'Quantidade']
         fig_the = criar_grafico_barras(df_the.head(10).sort_values(by='Quantidade', ascending=True), 
                                        'Classificação', 'Quantidade', 'Times Higher Education', '#f43f5e') 
     else:
         fig_the = criar_grafico_barras(pd.DataFrame({'C':['Erro'],'Q':[0]}), 'C', 'Q', 'Erro THE', '#f43f5e')
 
-    if 'qs_ranking' in df.columns:
-        df_qs = df['qs_ranking'].dropna().value_counts().reset_index()
+    if 'qs_ranking' in df_filtrado.columns:
+        df_qs = df_filtrado['qs_ranking'].dropna().value_counts().reset_index()
         df_qs.columns = ['Classificação', 'Quantidade']
         fig_qs = criar_grafico_barras(df_qs.head(10).sort_values(by='Quantidade', ascending=True), 
                                       'Classificação', 'Quantidade', 'QS World University Rankings', '#fb7185') 
@@ -115,8 +134,11 @@ def indicadores():
 
     resp_config = {'responsive': True, 'displayModeBar': False}
 
+    # "o que for preciso para rodar": Adicionados 'paises' e 'selecionado' para alimentar o select do HTML
     return render_template("page5.html",
                        request=request,
+                       paises=paises_disponiveis,
+                       selecionado=pais_selecionado,
                        grafico_prog=fig_prog.to_html(full_html=False, include_plotlyjs=False, config=resp_config),
                        grafico_nat=fig_nat_exclusiva.to_html(full_html=False, include_plotlyjs=False, config=resp_config),                       
                        grafico_the=fig_the.to_html(full_html=False, include_plotlyjs=False, config=resp_config),
