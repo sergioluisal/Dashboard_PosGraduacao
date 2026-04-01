@@ -4,7 +4,7 @@ import plotly.express as px
 
 def carregar_dados():
     try:
-        df_raw = pd.read_excel("Analise.xlsx", skiprows=1)
+        df_raw = pd.read_excel("Analise.xlsx")
         df_raw.columns = df_raw.columns.str.strip()
 
         def obter_coluna(nome_coluna):
