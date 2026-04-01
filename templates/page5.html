@@ -13,18 +13,31 @@
         <h1 style="font-size: 40px; font-weight: bold; color: #0f172a; margin-bottom: 12px;">Painel de Indicadores</h1>
         <p style="color: #64748b; font-size: 18px;">Visão geral dos programas oferecidos e métricas globais de qualidade institucional.</p>
     </div>
+	
+	<div style="padding: 0px;">
+    <div style="margin-bottom: 25px;">
+        <form method="GET">
+            <select name="Pais" onchange="this.form.submit()" 
+                    style="padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; min-width: 200px; background: white; cursor: pointer;">
+                <option value="ALL" {% if selecionado == 'ALL' %}selected{% endif %}>Visualizar Todos os Países</option>
+                {% for p in paises %}
+                    <option value="{{ p }}" {% if selecionado == p %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-bottom: 32px;">
         <div class="card chart-card-wrapper" style="padding: 24px;">
             <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
-                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Volume de Programas:</strong> Distribuição da quantidade de programas conforme a sua descrição e área.</p>
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Volume de Programas:</strong> Distribuição do programas conforme a sua descrição e área.</p>
             </div>
             {{ grafico_prog|safe }}
         </div>
 
         <div class="card chart-card-wrapper" style="padding: 24px;">
             <div style="background-color: #ecfdf5; border-left: 4px solid #059669; padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;">
-                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Predomínio Institucional:</strong> Proporção de programas ofertados em IES Públicas versus Privadas.</p>
+                <p style="color: #475569; font-size: 13px; margin: 0;"><strong>Predomínio Institucional:</strong> Programas ofertados em IES Públicas versus Privadas.</p>
             </div>
 			{{ grafico_nat | safe }}
         </div>
