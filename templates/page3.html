@@ -4,7 +4,19 @@
 <div>
     <div style="margin-bottom: 48px;">
         <h1 style="font-size: 40px; font-weight: bold; color: #0f172a; margin-bottom: 12px;">Análise de Distribuição e Excelência</h1>
-        <p style="color: #64748b; font-size: 18px;">Visão detalhada das modalidades, financiamento e prestígio académico.</p>
+        <p style="color: #64748b; font-size: 18px;">Visão detalhada das modalidades, financiamento e prestígio acadêmico.</p>
+    </div>
+	
+	<div style="margin-bottom: 25px;">
+     <form method="GET">
+        <select name="Pais" onchange="this.form.submit()" 
+                style="padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; min-width: 200px; background: white; cursor: pointer;">
+            <option value="ALL" {% if selecionado == 'ALL' %}selected{% endif %}>Todos os Países</option>
+            {% for p in paises %}
+                <option value="{{ p }}" {% if selecionado == p %}selected{% endif %}>{{ p }}</option>
+            {% endfor %}
+        </select>
+     </form>
     </div>
 
     <div style="display: grid; grid-template-columns: 1fr; gap: 32px; margin-bottom: 48px;">
@@ -30,7 +42,7 @@
         <div class="card" style="padding: 24px;">
             <div style="background-color: #fff7ed; border-left: 4px solid #f97316; padding: 16px; border-radius: 4px; margin-bottom: 24px;">
                 <p style="color: #475569; font-size: 14px; margin: 0;">
-                    <strong style="color: #1e293b;">Insight Estratégico:</strong> Matriz de excelência académica por país. As bolhas representam as universidades. Bolhas <span style="color: #f97316; font-weight: bold;">Laranjas e maiores</span> destacam a elite (Top 20 do Ranking QS), permitindo identificar rapidamente quais as nações que concentram os programas de maior prestígio.
+                    <strong style="color: #1e293b;">Insight Estratégico:</strong> Matriz de excelência acadêmica por país. As bolhas representam as universidades. Bolhas <span style="color: #f97316; font-weight: bold;">Laranjas e maiores</span> destacam a elite (Top 20 do Ranking QS), permitindo identificar rapidamente quais as nações que concentram os programas de maior prestígio.
                 </p>
             </div>
             {{ grafico_matriz|safe }}
