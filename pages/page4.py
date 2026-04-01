@@ -52,6 +52,10 @@ def gerar_grafico_html(df_filtrado, col_nome, titulo, cor):
     
     fig.update_layout(template="plotly_white", margin=dict(l=200, r=20, t=50, b=20), height=350)
     fig.update_traces(textposition='inside', textangle=0, insidetextfont=dict(color='#1e293b', size=12), cliponaxis=False)
+
+    # --- INCREMENTO PARA DEIXAR "ITEM" E "QUANTIDADE" EM BRANCO ---
+    fig.update_xaxes(title_font=dict(color='white'))
+    fig.update_yaxes(title_font=dict(color='white'))
     
     # A MÁGICA DO FLASK: Converte a figura para código HTML
     return fig.to_html(full_html=False, include_plotlyjs='cdn')
