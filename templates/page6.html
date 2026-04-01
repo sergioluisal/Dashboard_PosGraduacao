@@ -1,35 +1,25 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="container mx-auto px-4 py-6">
-    <h1 class="text-3xl font-bold text-gray-800 mb-8 border-b pb-4">Análise Qualitativa e Ranking</h1>
+{% block content %} 
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 border-l-4 border-blue-500">
-            <p class="text-sm font-medium text-gray-500 mb-1">Total de Programas</p>
-            <h3 class="text-4xl font-bold text-gray-800">{{ total_programas }}</h3>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 border-l-4 border-green-500">
-            <p class="text-sm font-medium text-gray-500 mb-1">Programas Nível Alto (A)</p>
-            <h3 class="text-4xl font-bold text-green-600">{{ total_destaque }}</h3>
-        </div>
-        
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 border-l-4 border-purple-500">
-            <p class="text-sm font-medium text-gray-500 mb-1">País com Mais Ofertas</p>
-            <h3 class="text-3xl font-bold text-purple-600 truncate mt-1">{{ top_pais }}</h3>
-        </div>
+<div>
+    <div style="margin-bottom: 48px;">
+        <h1 style="font-size: 40px; font-weight: bold; color: #0f172a; margin-bottom: 12px;">Análise Textual</h1>
+        <p style="color: #64748b; font-size: 18px;">Representação visual dos termos mais frequentes.</p>
     </div>
-
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-10">
-        <h2 class="text-xl font-bold text-gray-800 mb-6">Tabela Detalhada de Conceitos</h2>
-        <div class="w-full overflow-hidden">
-            {{ tabela_ranking | safe }}
-        </div>
-    </div>
-
-    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Análise Textual (Nuvens de Palavras)</h2>
-
+	
+	<div style="padding: 0px;">
+    <div style="margin-bottom: 25px;">
+        <form method="GET">
+            <select name="Pais" onchange="this.form.submit()" 
+                    style="padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1; min-width: 200px; background: white; cursor: pointer;">
+                <option value="ALL" {% if selecionado == 'ALL' %}selected{% endif %}>Visualizar Todos os Países</option>
+                {% for p in paises %}
+                    <option value="{{ p }}" {% if selecionado == p %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    <div class="container mx-auto px-4 py-6"> 
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-bottom: 48px;">
         
         <div class="card chart-card-wrapper" style="padding: 24px;">
